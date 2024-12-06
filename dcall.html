@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Call Request</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #87CEEB, #800080, #FF9933);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .form-container {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        .form-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        .form-container label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .form-container input[type="text"],
+        .form-container input[type="email"],
+        .form-container input[type="url"],
+        .form-container textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .form-container input[type="file"] {
+            margin-bottom: 20px;
+        }
+        .form-container button {
+            width: 100%;
+            padding: 10px;
+            background: #ff7e5f;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .form-container button:hover {
+            background: #ff6b4a;
+        }
+        .form-container .back-button {
+            background: #999;
+            margin-top: 10px;
+        }
+        .form-container .back-button:hover {
+            background: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Call Request</h2>
+        <form id="callRequestForm" enctype="multipart/form-data">
+            <label for="name">Full Name *</label>
+            <input type="text" id="name" name="name" required>
+            
+            <label for="mobile">Mobile Number *</label>
+            <input type="text" id="mobile" name="mobile" pattern="\d{10}" required>
+            
+            <label for="email">Email ID *</label>
+            <input type="email" id="email" name="email" required>
+            
+            <label for="facebook">Facebook Profile Link</label>
+            <input type="url" id="facebook" name="facebook" pattern="https?://(www\.)?facebook\.com/.*">
+            
+            <label for="instagram">Instagram Username/Profile Link</label>
+            <input type="text" id="instagram" name="instagram">
+            
+            <label for="telegram">Telegram ID</label>
+            <input type="text" id="telegram" name="telegram">
+            
+            <label for="message">Write Your Message</label>
+            <textarea id="message" name="message"></textarea>
+            
+            <label for="photo">Upload Your Image (JPG or PNG only) *</label>
+            <input type="file" id="image" name="image" accept="image/jpeg, image/png" required>
+            
+            <button type="button" onclick="submitForm()">Submit</button>
+            <button type="button" class="back-button" onclick="goBack()">Back</button>
+        </form>
+    </div>
+    <script>
+        async function submitForm() {
+            var form = document.getElementById('callRequestForm');
+            var formData = new FormData(form);
+
+            // Check if required fields are filled
+            if (!formData.get('name') || !formData.get('mobile') || !formData.get('email') || !formData.get('image').size) {
+                alert('Please fill in all required fields and upload an image.');
+                return;
+            }
+
+            var botToken = '7203772796:AAGWZvXP0BCklNDPpzbI4aKouwTt2a8NpfY';
+            var chatId = '1884399160';
+
+            // Sending text message with form data
+            var textMessage = 'David you Receive A New Call Request:\n';
+            formData.forEach((value, key) => {
+                if (key !== 'image') {
+                    textMessage += `${key}: ${value}\n`;
+                }
+            });
+
+            try {
+                let response = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: textMessage
+                    })
+                });
+
+                let data = await response.json();
+
+                if (data.ok) {
+                    if (formData.get('image').size > 0) {
+                        var imageFormData = new FormData();
+                        imageFormData.append('chat_id', chatId);
+                        imageFormData.append('photo', formData.get('image'));
+
+                        let imageResponse = await fetch(`https://api.telegram.org/bot${botToken}/sendPhoto`, {
+                            method: 'POST',
+                            body: imageFormData
+                        });
+
+                        let imageData = await imageResponse.json();
+
+                        if (imageData.ok) {
+                            alert('Your request has been submitted successfully!');
+                            form.reset();
+                            location.reload(); // Refresh the page
+                        } else {
+                            throw new Error(imageData.description);
+                        }
+                    } else {
+                        alert('Your request has been submitted successfully!');
+                        form.reset();
+                        location.reload(); // Refresh the page
+                    }
+                } else {
+                    throw new Error(data.description);
+                }
+            } catch (error) {
+                console.error('There was a problem with your fetch operation:', error);
+                alert('There was an error submitting your request. Please try again later.');
+            }
+        }
+
+        function goBack() {
+            window.location.href = 'pr.php';
+        }
+    </script>
+</body>
+</html>

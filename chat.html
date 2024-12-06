@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>David Chat System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-image: url('beautiful_background.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        .chat-container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .chat-header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+            position: relative;
+        }
+
+        .chat-header .back-button {
+            position: absolute;
+            left: 10px;
+            top: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .chat-messages {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+        }
+
+        .chat-message {
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            max-width: 70%;
+        }
+
+        .chat-message.user {
+            background-color: #87ceeb;
+            color: #fff;
+            justify-content: flex-start;
+        }
+
+        .chat-message.admin {
+            background-color: #800080;
+            color: #fff;
+            justify-content: flex-end;
+        }
+
+        .chat-message img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .chat-message-content {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-message-content img,
+        .chat-message-content video,
+        .chat-message-content audio {
+            max-width: 100%;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .chat-input-section {
+            background-color: #f0f0f0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-input {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .chat-input input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+        }
+
+        .chat-input button {
+            padding: 10px 15px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .chat-input button:hover {
+            background-color: #0056b3;
+        }
+
+        .floating-buttons {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .floating-buttons button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+        }
+
+        .floating-buttons button:hover {
+            background-color: #0056b3;
+        }
+
+        .floating-buttons input[type="file"] {
+            display: none;
+        }
+
+        .floating-buttons label {
+            color: #007bff;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <button class="back-button" onclick="goBack()">🔙</button>
+            Chat with David
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <!-- Chat messages will be appended here -->
+        </div>
+        <div class="chat-input-section">
+            <div class="floating-buttons">
+                <button onclick="document.getElementById('fileInput').click()">📁</button>
+                <input type="file" id="fileInput" accept="image/*,video/*,audio/*" onchange="previewAndUploadFile()" />
+                <label for="fileInput">Upload</label>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="chatInput" placeholder="Type your message here..." disabled />
+                <button id="sendButton" onclick="sendMessage(event)" disabled>Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const botToken = '7203772796:AAGWZvXP0BCklNDPpzbI4aKouwTt2a8NpfY';
+        const adminChatId = '1884399160';
+        const chatContainer = document.querySelector('.chat-messages');
+        const chatInput = document.getElementById('chatInput');
+        const sendButton = document.getElementById('sendButton');
+        const fileInput = document.getElementById('fileInput');
+        let userName = '';
+        let lastMessageTime = Date.now();
+        let messageTimer;
+
+        function promptUserName() {
+            userName = prompt('Please enter your name:');
+            if (userName) {
+                chatInput.disabled = false;
+                sendButton.disabled = false;
+                appendMessage('admin', `Hello ${userName}, how can I help you today?`);
+                resetMessageTimer();
+            } else {
+                promptUserName();
+            }
+        }
+
+        function sendMessage(event) {
+            event.preventDefault();
+            const message = chatInput.value;
+            if (message.trim() !== '') {
+                const userMessage = `${userName}: ${message}`;
+                sendToTelegram(userMessage);
+                appendMessage('user', userMessage);
+                chatInput.value = '';
+                resetMessageTimer();
+            }
+        }
+
+        function sendToTelegram(message) {
+            const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: adminChatId,
+                    text: message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Message sent to Telegram:', data);
+            })
+            .catch(error => console.error('Error sending message to Telegram:', error));
+        }
+
+        function previewAndUploadFile() {
+            const file = fileInput.files[0];
+            if (file) {
+                const fileUrl = URL.createObjectURL(file);
+                let fileType = '';
+                let message = '';
+
+                if (file.type.startsWith('image/')) {
+                    fileType = 'img';
+                    message = `Image uploaded by ${userName}`;
+                } else if (file.type.startsWith('video/')) {
+                    fileType = 'video';
+                    message = `Video uploaded by ${userName}`;
+                } else if (file.type.startsWith('audio/')) {
+                    fileType = 'audio';
+                    message = `Voice message uploaded by ${userName}`;
+                } else {
+                    alert('Unsupported file type.');
+                    return;
+                }
+
+                // Preview the file in the chat
+                appendMessage('user', message, fileUrl, fileType);
+
+                // Upload the file to Telegram
+                const formData = new FormData();
+                formData.append('chat_id', adminChatId);
+
+                let endpoint = '';
+                if (fileType === 'img') {
+                    formData.append('photo', file);
+                    endpoint = 'sendPhoto';
+                } else if (fileType === 'video') {
+                    formData.append('video', file);
+                    endpoint = 'sendVideo';
+                } else if (fileType === 'audio') {
+                    formData.append('voice', file);
+                    endpoint = 'sendVoice';
+                }
+
+                fetch(`https://api.telegram.org/bot${botToken}/${endpoint}`, {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('File sent to Telegram:', data);
+                    resetMessageTimer();
+                })
+                .catch(error => console.error('Error sending file to Telegram:', error));
+            }
+        }
+
+        function fetchAdminReply() {
+            const url = `https://api.telegram.org/bot${botToken}/getUpdates`;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const messages = data.result;
+                    messages.forEach(message => {
+                        if (message.message && message.message.from.id.toString() === adminChatId && !localStorage.getItem(message.update_id)) {
+                            localStorage.setItem(message.update_id, true);
+                            if (message.message.text) {
+                                const adminMessage = message.message.text;
+                                appendMessage('admin', adminMessage);
+                            } else if (message.message.photo) {
+                                const fileId = message.message.photo[message.message.photo.length - 1].file_id;
+                                fetchFileUrl(fileId, 'photo');
+                            } else if (message.message.video) {
+                                const fileId = message.message.video.file_id;
+                                fetchFileUrl(fileId, 'video');
+                            } else if (message.message.voice) {
+                                const fileId = message.message.voice.file_id;
+                                fetchFileUrl(fileId, 'voice');
+                            }
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching updates from Telegram:', error));
+        }
+
+        function fetchFileUrl(fileId, type) {
+            const url = `https://api.telegram.org/bot${botToken}/getFile?file_id=${fileId}`;
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const fileUrl = `https://api.telegram.org/file/bot${botToken}/${data.result.file_path}`;
+                    if (type === 'photo') {
+                        appendMessage('admin', 'David sent an image:', fileUrl, 'img');
+                    } else if (type === 'video') {
+                        appendMessage('admin', 'David sent a video:', fileUrl, 'video');
+                    } else if (type === 'voice') {
+                        appendMessage('admin', 'David sent a voice message:', fileUrl, 'audio');
+                    }
+                })
+                .catch(error => console.error('Error fetching file URL from Telegram:', error));
+        }
+
+        function appendMessage(sender, message, fileUrl = '', fileType = '') {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('chat-message', sender);
+
+            const messageContent = document.createElement('div');
+            messageContent.classList.add('chat-message-content');
+            messageContent.innerHTML = `<span>${message}</span>`;
+
+            if (fileUrl && fileType) {
+                let fileElement;
+                if (fileType === 'img') {
+                    fileElement = document.createElement('img');
+                } else if (fileType === 'video') {
+                    fileElement = document.createElement('video');
+                    fileElement.controls = true;
+                } else if (fileType === 'audio') {
+                    fileElement = document.createElement('audio');
+                    fileElement.controls = true;
+                }
+                fileElement.src = fileUrl;
+                messageContent.appendChild(fileElement);
+            }
+
+            messageElement.appendChild(messageContent);
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function resetMessageTimer() {
+            clearTimeout(messageTimer);
+            messageTimer = setTimeout(promptEndChat, 120000); // 2 minutes
+        }
+
+        function promptEndChat() {
+            if (confirm('Do you need further assistance?')) {
+                resetMessageTimer();
+            } else {
+                clearMessages();
+            }
+        }
+
+        function clearMessages() {
+            document.getElementById('chatMessages').innerHTML = '';
+            localStorage.clear();
+        }
+
+        function goBack() {
+            window.location.href = 'pr.php';
+        }
+
+        promptUserName();
+        setInterval(fetchAdminReply, 5000);
+    </script>
+</body>
+</html>

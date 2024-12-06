@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>David's Social Media Links</title>
+    <style>
+        body {
+            background: linear-gradient(to right, #87CEEB, #800080, #FF9933);
+            font-family: Arial, sans-serif;
+            color: white;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .profile-pic {
+            border-radius: 50%;
+            width: 150px;
+            height: 150px;
+            margin-bottom: 20px;
+            border: 5px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .profile-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .list {
+            list-style-type: none;
+            padding: 0;
+            text-align: center;
+        }
+
+        .list li {
+            margin-bottom: 20px;
+        }
+
+        .list li a {
+            display: block;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.2);
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .list li a:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .icon {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            width: 100%;
+        }
+
+        footer img {
+            width: 30px;
+            height: 30px;
+            vertical-align: middle;
+        }
+
+        footer p {
+            display: inline;
+            margin-left: 10px;
+        }
+
+        .qr-code {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .qr-code img {
+            width: 100px;
+            height: 100px;
+        }
+
+        .qr-code p {
+            margin-top: 10px;
+            color: #fff;
+        }
+
+        .request-button,
+        .chat-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-weight: bold;
+        }
+
+        .request-button:hover,
+        .chat-button:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+    </style>
+    <script>
+        // Set a timeout to refresh the page after 15 minutes (900000 milliseconds)
+        setTimeout(function () {
+            window.location.href = "https://imdavid.in/";
+        }, 900000); // 15 minutes in milliseconds
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <img src="profile-picture.jpg" alt="David's Profile Picture" class="profile-pic">
+        <div class="profile-name">David</div>
+        <ul class="list">
+            <li><a href="https://www.facebook.com/davidkhiddelstone9098?mibextid=ZbWKwL" target="_blank"><img src="facebook-logo.png" alt="Facebook" class="icon">Facebook</a></li>
+            <li><a href="https://www.instagram.com/lucky_970m?igsh=czhqMG95OHkwMGg=" target="_blank"><img src="instagram-logo.png" alt="Instagram" class="icon">Instagram</a></li>
+            <li><a href="https://www.kooapp.com/profile/david17II8R" target="_blank"><img src="kooapp-logo.png" alt="Kooapp" class="icon">Kooapp</a></li>
+            <li><a href="https://wa.me/qr/LVAAUTZ76NCWP1" target="_blank"><img src="whatsapp-logo.png" alt="WhatsApp" class="icon">WhatsApp</a></li>
+            <li><a href="tel:+917602811147" target="_blank"><img src="mobile-logo.png" alt="Mobile" class="icon">Mobile Number</a></li>
+            <li><a href="mailto:davidk76011@gmail.com"><img src="email-logo.png" alt="Email" class="icon">Mail</a></li>
+        </ul>
+        <div class="qr-code">
+            <img src="qr-code.png" alt="QR Code">
+            <p>Scan Me</p>
+        </div>
+        <button class="chat-button" onclick="window.location.href='chat.html'">Chat Now</button>
+        <button class="request-button" onclick="window.location.href='dcall.html'">Call Request</button>
+    </div>
+    <footer>
+        <img src="david.png" alt="Maker Logo">
+        <p>Thanks for visiting</p>
+    </footer>
+</body>
+
+</html>
