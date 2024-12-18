@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recording Diya</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            text-align: center;
+            padding: 20px;
+        }
+        .profile {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .profile img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        .profile h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+        .audio-container {
+            margin: 20px 0;
+        }
+        audio {
+            width: 100%;
+            max-width: 400px;
+            margin: 10px auto;
+            display: block;
+        }
+        footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Profile Section -->
+        <div class="profile">
+            <img src="diya.jpg" alt="Profile Picture of Diya">
+            <h1>Recording Diya</h1>
+        </div>
+
+        <!-- Audio Players -->
+        <div class="audio-container">
+            <h2>Raco1.opus</h2>
+            <audio controls>
+                <source src="/home/Raco1.opus" type="audio/ogg; codecs=opus">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+
+        <div class="audio-container">
+            <h2>Raco2.opus</h2>
+            <audio controls>
+                <source src="/home/Raco2.opus" type="audio/ogg; codecs=opus">
+                Your browser does not support the audio element.
+            </audio>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Recording Diya. All rights reserved.</p>
+    </footer>
+</body>
+</html>
