@@ -77,7 +77,37 @@
         footer a:hover {
             text-decoration: underline;
         }
+
+        .powered-by {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .powered-by img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .powered-by p {
+            font-size: 16px;
+            color: #fff;
+        }
     </style>
+    <script>
+        // Password protection logic
+        const password = "7602";
+        let userPassword = prompt("Please enter the password to access the page:");
+
+        if (userPassword !== password) {
+            // If the password is incorrect, show an alert and redirect to another page (optional)
+            alert("Incorrect password. Access denied.");
+            window.location.href = "https://www.imdavid.in";  // You can change this URL to a redirect of your choice
+        }
+    </script>
 </head>
 <body>
     <div class="container">
@@ -111,5 +141,11 @@
         <p>&copy; 2024 Recording Diya. All rights reserved.</p>
         <p><a href="https://www.imdavid.in" target="_blank">Visit our site for more</a></p>
     </footer>
+
+    <!-- Powered by Section -->
+    <div class="powered-by">
+        <img src="david.png" alt="Powered by David">
+        <p>Powered by David</p>
+    </div>
 </body>
 </html>
