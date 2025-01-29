@@ -23,6 +23,7 @@
             justify-content: center;
             height: 100vh;
             background: transparent;
+            color: white; /* Text color set to white */
             overflow: hidden;
             position: relative;
         }
@@ -48,7 +49,7 @@
         .container {
             width: 90%;
             max-width: 450px;
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.1); /* Transparent background */
             backdrop-filter: blur(8px);
             border-radius: 12px;
             padding: 20px;
@@ -58,16 +59,16 @@
 
         /* Profile */
         .profile img {
-            width: 100px;  /* Resized profile picture */
-            height: 100px;
+            width: 150px;  /* Larger profile picture */
+            height: 150px;
             border-radius: 50%;
-            border: 3px solid #5a6fcd;
+            border: 4px solid #5a6fcd;
         }
 
         .profile h1 {
-            font-size: 24px;
+            font-size: 28px;  /* Increased heading size */
             margin-top: 15px;
-            color: #333;
+            color: white; /* Heading color in white */
         }
 
         /* Social Links */
@@ -78,33 +79,45 @@
         }
 
         .list li {
-            margin: 10px 0;
+            margin: 15px 0;
         }
 
         .list li a {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
-            padding: 12px;
-            border-radius: 8px;
+            gap: 15px;  /* Increased space between icon and text */
+            padding: 15px;
+            border-radius: 10px;
             text-decoration: none;
-            background: #dfe6e9;
-            color: #2d3436;
-            font-size: 16px;
+            color: white; /* Default color for text in white */
+            font-size: 18px;  /* Increased font size */
             font-weight: 500;
             transition: background 0.3s ease, box-shadow 0.3s ease;
         }
 
+        /* Unique Colors for each link */
+        .facebook {
+            background: #3b5998; /* Facebook color */
+        }
+
+        .instagram {
+            background: #e1306c; /* Instagram color */
+        }
+
+        .email {
+            background: #d44638; /* Email (Mail) color */
+        }
+
         .list li a:hover {
-            background: #74b9ff;
+            opacity: 0.9;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
         }
 
         /* Icons */
         .icon {
-            width: 20px;  /* Resized icons */
-            height: 20px;
+            width: 30px;  /* Larger icons */
+            height: 30px;
             transition: transform 0.3s ease;
         }
 
@@ -114,17 +127,17 @@
 
         /* Footer */
         .footer {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #777;
+            margin-top: 25px;
+            font-size: 16px;  /* Larger footer text */
+            color: white; /* Footer text in white */
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;  /* Increased gap between text and flag */
         }
 
         .footer img {
-            width: 18px; /* Resized Indian flag */
+            width: 30px; /* Larger Indian flag */
             height: auto;
             vertical-align: middle;
         }
@@ -142,17 +155,17 @@
 
         <ul class="list">
             <li>
-                <a href="https://www.facebook.com/davidkhiddelstone9098?mibextid=ZbWKwL" target="_blank">
+                <a href="https://www.facebook.com/davidkhiddelstone9098?mibextid=ZbWKwL" target="_blank" class="facebook">
                     <img src="facebook-logo.png" alt="Facebook" class="icon"> Facebook
                 </a>
             </li>
             <li>
-                <a href="https://www.instagram.com/lucky_970m?igsh=czhqMG95OHkwMGg=" target="_blank">
+                <a href="https://www.instagram.com/lucky_970m?igsh=czhqMG95OHkwMGg=" target="_blank" class="instagram">
                     <img src="instagram-logo.png" alt="Instagram" class="icon"> Instagram
                 </a>
             </li>
             <li>
-                <a href="mailto:davidk76011@gmail.com">
+                <a href="mailto:davidk76011@gmail.com" class="email">
                     <img src="email-logo.png" alt="Email" class="icon"> Mail
                 </a>
             </li>
