@@ -4,34 +4,36 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>David's Bio Link Profile</title>
+    
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500&family=Roboto:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    
     <style>
-        /* Ensure the body takes up the entire viewport and is fully transparent */
-        body {
-            font-family: 'Roboto', sans-serif;
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
             display: flex;
             flex-direction: column;
             align-items: center;
-            height: 100vh;
             justify-content: center;
+            height: 100vh;
+            background: transparent;
             overflow: hidden;
             position: relative;
-            background: transparent;
-            color: #333;
         }
 
-        /* The background animation (3D-like gradient effect) */
+        /* Background Animation */
         .background {
             position: absolute;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
             background: linear-gradient(45deg, #ff6f61, #5a6fcd, #e4405f);
-            background-size: 600% 600%;
+            background-size: 400% 400%;
             animation: gradientAnimation 10s ease infinite;
             z-index: -1;
         }
@@ -42,108 +44,85 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* Profile container */
+        /* Container */
         .container {
             width: 90%;
-            max-width: 500px;
-            background-color: rgba(255, 255, 255, 0.6); /* Semi-transparent background */
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 450px;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
             padding: 20px;
             text-align: center;
-            backdrop-filter: blur(8px); /* Creates a blur effect */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
+        /* Profile */
         .profile img {
-            border-radius: 50%;
             width: 120px;
             height: 120px;
+            border-radius: 50%;
             border: 3px solid #5a6fcd;
         }
 
         .profile h1 {
+            font-size: 24px;
             margin-top: 15px;
-            font-size: 26px;
             color: #333;
-            font-family: 'Rubik', sans-serif;
         }
 
-        .social-links {
-            margin: 20px 0;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .social-links a {
-            text-decoration: none;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px 0;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-        }
-
-        .social-links a:hover {
-            transform: scale(1.1);
-        }
-
-        .facebook {
-            background-color: #3b5998;
-        }
-
-        .instagram {
-            background-color: #e4405f;
-        }
-
-        .email {
-            background-color: #0072c6;
-        }
-
-        .social-links img {
-            width: 24px;
-            height: 24px;
-            margin-right: 10px;
-        }
-
-        .contact-button {
+        /* Social Links */
+        .list {
+            list-style: none;
+            padding: 0;
             margin-top: 20px;
         }
 
-        .contact-button a {
+        .list li {
+            margin: 10px 0;
+        }
+
+        .list li a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
             text-decoration: none;
-            background-color: #ff6f61;
-            color: #fff;
-            padding: 12px 30px;
-            border-radius: 5px;
-            font-size: 18px;
-        }
-
-        /* Footer styling */
-        .footer {
-            padding: 10px 0;
-            width: 100%;
-            text-align: center;
+            background: #dfe6e9;
+            color: #2d3436;
             font-size: 16px;
-            color: #777;
-            background-color: rgba(255, 255, 255, 0.6);
-            position: absolute;
-            bottom: 0;
+            font-weight: 500;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
         }
 
-        .footer img {
-            width: 25px;
-            height: 25px;
-            vertical-align: middle;
-            margin-left: 5px;
+        .list li a:hover {
+            background: #74b9ff;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Icons */
+        .icon {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        .list li a:hover .icon {
+            transform: scale(1.2);
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #777;
         }
     </style>
 </head>
 <body>
 
-    <div class="background"></div> <!-- Background Animation -->
+    <div class="background"></div>
 
     <div class="container">
         <div class="profile">
@@ -151,22 +130,27 @@
             <h1>David</h1>
         </div>
 
-        <div class="social-links">
-            <a href="https://www.facebook.com/davidkhiddelstone9098?mibextid=ZbWKwL" target="_blank" class="facebook">
-                <img src="facebook-logo.png" alt="Facebook Logo"> Facebook
-            </a>
-            <a href="https://www.instagram.com/lucky_970m?igsh=czhqMG95OHkwMGg=" target="_blank" class="instagram">
-                <img src="instagram-logo.png" alt="Instagram Logo"> Instagram
-            </a>
-            <a href="mailto:davidk76011@gmail.com" class="email">
-                <img src="email-logo.png" alt="Email Logo"> Mail
-            </a>
-        </div>
-
+        <ul class="list">
+            <li>
+                <a href="https://www.facebook.com/davidkhiddelstone9098?mibextid=ZbWKwL" target="_blank">
+                    <img src="facebook-logo.png" alt="Facebook" class="icon"> Facebook
+                </a>
+            </li>
+            <li>
+                <a href="https://www.instagram.com/lucky_970m?igsh=czhqMG95OHkwMGg=" target="_blank">
+                    <img src="instagram-logo.png" alt="Instagram" class="icon"> Instagram
+                </a>
+            </li>
+            <li>
+                <a href="mailto:davidk76011@gmail.com">
+                    <img src="email-logo.png" alt="Email" class="icon"> Mail
+                </a>
+            </li>
+        </ul>
     </div>
 
     <div class="footer">
-        Make in India <img src="indian-flag.png" alt="Indian Flag">
+        Made in India <img src="indian-flag.png" alt="Indian Flag">
     </div>
 
 </body>
